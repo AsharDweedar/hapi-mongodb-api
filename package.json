@@ -1,0 +1,19 @@
+{
+  "name": "nestrom",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon start",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "csv-parser": "^2.3.0",
+    "dotenv": "^8.1.0",
+    "hapi": "^18.1.0",
+    "mongoose": "^5.7.0"
+  }
+}
