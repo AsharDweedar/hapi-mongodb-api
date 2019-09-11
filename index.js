@@ -9,6 +9,8 @@ const init = async () => {
     host: process.env.HOST || 'localhost'
   })
 
+  server.log()
+
   console.log('db starting')
   await conn
   console.log('db started')
@@ -22,7 +24,7 @@ const init = async () => {
 }
 
 process.on('unhandledRejection', err => {
-  console.log(err)
+  console.log('unhandledRejection : ', err)
   process.exit(1)
 })
 

@@ -3,8 +3,23 @@ module.exports = [
   {
     method: 'GET',
     path: '/api/movie/search',
-    handler: (req, res) => {
-      return 'Route to search movies by title, genres, and plot keywords'
+    handler: async (req, res) => {
+      console.log('req.query : ', req.query)
+      return new Promise((resolve, reject) => {
+        DB.movie.search({ query_string: { query: req.query.title } }, function (
+          err,
+          result
+        ) {
+          if (err) {
+            console.log('errrrrrrrrrrrrrrrrrrrrrrrrrrrrr', err)
+            return resolve(JSON.stringify(err))
+            // return reject(err)
+          }
+          console.log('ressssssssssssssssssssssssss')
+          resolve(result)
+        })
+      })
+      // return 'Route to search movies by title, genres, and plot keywords'
     }
   },
   {
@@ -41,6 +56,12 @@ module.exports = [
 
       if (['actor', 'director', 'movie'].includes(schema)) {
         var data = new DB[schema](req.payload)
+        data.on('es-indexed', function (err, res) {
+          if (err) console.log("err with indexing new doc : " ,  err)
+          console.log('res is indexed : ', res)
+
+          /* Document is indexed */
+        })
         return data.save()
       }
       return 'Route to get all movies with the ability to filter them by genres and plot keywords'
@@ -48,24 +69,29 @@ module.exports = [
   },
   {
     method: 'PUT',
-    path: '/api/{schema}',
-    handler: (req, res) => {
+    path: '/api/{schema}/{id}',
+    handler: async (req, res) => {
       let schema = req.params.schema
 
       if (['actor', 'director', 'movie'].includes(schema)) {
-        return 'Create CRUDs RESTful APIs for all schemas mentioned above'
+        // TODO: update
+        let res = await DB[schema].findOneById(req.params.id)
+        console.log('findOneById : ', res)
+        return await JSON.stringify(Object.assign(res, req.payload).save())
+        // return 'Create CRUDs RESTful APIs for all schemas mentioned above'
       }
       return 'Route to get all movies with the ability to filter them by genres and plot keywords'
     }
   },
   {
     method: 'DELETE',
-    path: '/api/{schema}',
+    path: '/api/{schema}/{id}',
     handler: (req, res) => {
       let schema = req.params.schema
 
       if (['actor', 'director', 'movie'].includes(schema)) {
-        return 'Create CRUDs RESTful APIs for all schemas mentioned above'
+        return DB[schema].findByIdAndRemove(req.params.id)
+        // return 'Create CRUDs RESTful APIs for all schemas mentioned above'
       }
       return 'Route to get all movies with the ability to filter them by genres and plot keywords'
     }

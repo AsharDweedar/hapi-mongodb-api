@@ -21,8 +21,16 @@ var MovieSchema = new Schema({
   imdb_score: Number,
   aspect_ratio: Number,
   movie_facebook_likes: Number,
-  actors: [String],
-  director: String,
+  actors: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'actor'
+    }
+  ],
+  director: {
+    type: Schema.Types.ObjectId,
+    ref: 'director'
+  },
   color: String
 })
 
@@ -35,20 +43,27 @@ MovieSchema.plugin(mongoosastic, {
 
 var movie = mongoose.model('movie', MovieSchema)
 
-movie.createMapping(function (err, mapping) {
-  if (err) {
-    console.log('error creating mapping (you can safely ignore this)')
-    console.log(err)
-  } else {
-    console.log('mapping created!')
-    console.log(mapping)
-    console.log('starting the search')
-    movie.search({ query: 'geners' }, function (err, results) {
-      console.log('search elastic ...........')
-      console.log('err : ', err)
-      console.log('result : ', results)
-    })
-  }
-})
+// movie.createMapping(function (err, mapping) {
+//   if (err) {
+//     console.log('error creating mapping (you can safely ignore this)')
+//     console.log(err)
+//   } else {
+//     console.log('mapping created!')
+//     console.log(mapping)
+//   }
+// })
+// var stream = movie.synchronize(function (err, data) {
+//   console.log('movie.synchronize err : ', err)
+//   console.log('movie.synchronize data : ', data)
+// })
+// var count = 0
+
+// stream.on('data', (err, doc) => {
+//   console.log('on data , err : ', err)
+//   console.log('on data , doc : ', doc)
+//   count++
+// })
+// stream.on('close', () => console.log('indexed ' + count + ' documents!'))
+// stream.on('error', err => console.log('err with sync : ', err))
 
 module.exports = movie
