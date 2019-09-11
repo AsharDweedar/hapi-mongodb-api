@@ -86,7 +86,8 @@ var actor = mongoose.model('actor', ActorSchema)
 var DB = {
   actor,
   director,
-  movie
+  movie,
+  client
 }
 
 module.exports = DB

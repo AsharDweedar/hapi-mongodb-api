@@ -18,7 +18,7 @@ module.exports = [
         //   console.log('ressssssssssssssssssssssssss')
         //   resolve(result)
         // })
-        client
+        DB.client
           .search({
             q: 'title'
           })
