@@ -6,18 +6,32 @@ module.exports = [
     handler: async (req, res) => {
       console.log('req.query : ', req.query)
       return new Promise((resolve, reject) => {
-        DB.movie.search({ query_string: { query: req.query.title } }, function (
-          err,
-          result
-        ) {
-          if (err) {
-            console.log('errrrrrrrrrrrrrrrrrrrrrrrrrrrrr', err)
-            return resolve(JSON.stringify(err))
-            // return reject(err)
-          }
-          console.log('ressssssssssssssssssssssssss')
-          resolve(result)
-        })
+        // DB.movie.search({ query_string: { query: req.query.title } }, function (
+        //   err,
+        //   result
+        // ) {
+        //   if (err) {
+        //     console.log('errrrrrrrrrrrrrrrrrrrrrrrrrrrrr', err)
+        //     return resolve(JSON.stringify(err))
+        //     // return reject(err)
+        //   }
+        //   console.log('ressssssssssssssssssssssssss')
+        //   resolve(result)
+        // })
+        client
+          .search({
+            q: 'title'
+          })
+          .then(
+            function (body) {
+              var hits = body.hits.hits
+              resolve(hits)
+            },
+            function (error) {
+              console.trace(error.message)
+              resolve(JSON.stringify(error))
+            }
+          )
       })
       // return 'Route to search movies by title, genres, and plot keywords'
     }
@@ -57,7 +71,7 @@ module.exports = [
       if (['actor', 'director', 'movie'].includes(schema)) {
         var data = new DB[schema](req.payload)
         data.on('es-indexed', function (err, res) {
-          if (err) console.log("err with indexing new doc : " ,  err)
+          if (err) console.log('err with indexing new doc : ', err)
           console.log('res is indexed : ', res)
 
           /* Document is indexed */

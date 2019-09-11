@@ -4,7 +4,27 @@
 
 var { mongoose } = require('./mongoose.js')
 var Schema = mongoose.Schema
-var mongoosastic = require('mongoosastic')
+// var mongoosastic = require('mongoosastic')
+
+var client = require('elasticsearch').Client({
+  hosts: [
+    'search-nestrom-playground1-pe3bbwxgkncelmmg6u3d45exdq.eu-west-1.es.amazonaws.com',
+    'search-nestrom-playground1-pe3bbwxgkncelmmg6u3d45exdq .eu-west-1.es.amazonaws.com/_plugin/kibana/app/kibana'
+  ],
+  protocol: 'https',
+  connectionClass: require('http-aws-es'),
+  amazonES: {
+    region: 'eu-west-1'
+  }
+})
+
+client.ping({ requestTimeout: 30000 }, function (error) {
+  if (error) {
+    console.error('elasticsearch cluster is down!')
+  } else {
+    console.log('All is well')
+  }
+})
 
 var ActorSchema = new Schema({
   name: String,
@@ -53,34 +73,6 @@ var MovieSchema = new Schema({
   color: String
 })
 
-ActorSchema.plugin(mongoosastic, {
-  host:
-    'search-nestrom-playground1-pe3bbwxgkncelmmg6u3d45exdq.eu-west-1.es.amazonaws.com',
-  port: 9200,
-  protocol: 'https',
-  curlDebug: true
-})
-
-DirectorSchema.plugin(mongoosastic, {
-  host:
-    'search-nestrom-playground1-pe3bbwxgkncelmmg6u3d45exdq.eu-west-1.es.amazonaws.com',
-  port: 9200,
-  protocol: 'https',
-  curlDebug: true
-})
-
-MovieSchema.plugin(mongoosastic, {
-  host:
-    'search-nestrom-playground1-pe3bbwxgkncelmmg6u3d45exdq.eu-west-1.es.amazonaws.com',
-  port: 9200,
-  populate: [
-    { path: 'actor', select: 'name age facebook_page_link' },
-    { path: 'director', select: 'name age' }
-  ],
-  protocol: 'https',
-  curlDebug: true
-})
-
 var movie = mongoose.model('movie', MovieSchema)
 var director = mongoose.model('director', DirectorSchema)
 var actor = mongoose.model('actor', ActorSchema)
@@ -88,6 +80,8 @@ var actor = mongoose.model('actor', ActorSchema)
 // doer(movie)
 // doer(director)
 // doer(actor)
+
+// doer2()
 
 var DB = {
   actor,
@@ -121,4 +115,34 @@ function doer (schema) {
 
   stream.on('close', () => console.log('indexed ' + count + ' documents!'))
   stream.on('error', err => console.log('err with sync : ', err))
+}
+
+function doer2 () {
+  ActorSchema.plugin(mongoosastic, {
+    host:
+      'search-nestrom-playground1-pe3bbwxgkncelmmg6u3d45exdq.eu-west-1.es.amazonaws.com',
+    port: 9200,
+    protocol: 'https',
+    curlDebug: true
+  })
+
+  DirectorSchema.plugin(mongoosastic, {
+    host:
+      'search-nestrom-playground1-pe3bbwxgkncelmmg6u3d45exdq.eu-west-1.es.amazonaws.com',
+    port: 9200,
+    protocol: 'https',
+    curlDebug: true
+  })
+
+  MovieSchema.plugin(mongoosastic, {
+    host:
+      'search-nestrom-playground1-pe3bbwxgkncelmmg6u3d45exdq.eu-west-1.es.amazonaws.com',
+    port: 9200,
+    populate: [
+      { path: 'actor', select: 'name age facebook_page_link' },
+      { path: 'director', select: 'name age' }
+    ],
+    protocol: 'https',
+    curlDebug: true
+  })
 }
