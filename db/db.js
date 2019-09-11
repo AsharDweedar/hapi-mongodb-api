@@ -6,7 +6,7 @@ var { mongoose } = require('./mongoose.js')
 var Schema = mongoose.Schema
 // var mongoosastic = require('mongoosastic')
 
-var client = require('elasticsearch').Client({
+var client = new require('elasticsearch').Client({
   hosts: [
     'search-nestrom-playground1-pe3bbwxgkncelmmg6u3d45exdq.eu-west-1.es.amazonaws.com',
     'search-nestrom-playground1-pe3bbwxgkncelmmg6u3d45exdq .eu-west-1.es.amazonaws.com/_plugin/kibana/app/kibana'
