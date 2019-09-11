@@ -7,5 +7,6 @@ var ActorSchema = new Schema({
   age: Number,
   facebook_page_link: String
 })
+
 var actor = mongoose.model('actor', ActorSchema)
 module.exports = actor
