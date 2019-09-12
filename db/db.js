@@ -8,8 +8,9 @@ var Schema = mongoose.Schema
 
 var client = new require('elasticsearch').Client({
   hosts: [
-    'search-nestrom-playground1-pe3bbwxgkncelmmg6u3d45exdq.eu-west-1.es.amazonaws.com',
-    'search-nestrom-playground1-pe3bbwxgkncelmmg6u3d45exdq .eu-west-1.es.amazonaws.com/_plugin/kibana/app/kibana'
+    'arn:aws:es:us-east-2:870484560720:domain/nestrom-test',
+    // 'search-nestrom-playground1-pe3bbwxgkncelmmg6u3d45exdq.eu-west-1.es.amazonaws.com',
+    // 'search-nestrom-playground1-pe3bbwxgkncelmmg6u3d45exdq .eu-west-1.es.amazonaws.com/_plugin/kibana/app/kibana'
   ],
   protocol: 'https',
   connectionClass: require('http-aws-es'),
