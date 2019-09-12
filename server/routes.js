@@ -2,37 +2,55 @@ const DB = require('../db/db')
 module.exports = [
   {
     method: 'GET',
-    path: '/api/movie/search',
+    path: '/api/{schema}/search',
     handler: async (req, res) => {
+      let schema = req.params.schema
       console.log('req.query : ', req.query)
       return new Promise((resolve, reject) => {
-        DB.movie.search({ query_string: { query: req.query.title } }, function (
-          err,
-          result
-        ) {
-          if (err) {
-            console.log('errrrrrrrrrrrrrrrrrrrrrrrrrrrrr', err)
-            return resolve(JSON.stringify(err))
-            // return reject(err)
+        DB[schema].search(
+          { query_string: { query: req.query.title } },
+          function (err, result) {
+            if (err) {
+              console.log('errrrrrrrrrrrrrrrrrrrrrrrrrrrrr', err)
+              return resolve(JSON.stringify(err))
+            }
+            console.log('ressssssssssssssssssssssssss')
+            resolve(result)
           }
-          console.log('ressssssssssssssssssssssssss')
-          resolve(result)
-        })
+        )
       })
-      // return 'Route to search movies by title, genres, and plot keywords'
+      // return 'Route to search schema by title, genres, and plot keywords'
     }
   },
   {
     method: 'GET',
-    path: '/api/movie/count',
+    path: '/api/movies/count',
     handler: (req, res) => {
-      return 'Route to get movies count by language, country and IMDB score (the IMDB score should be a range)'
+      // TODO: add query from params
+      return new Promise(function (resolve, reject) {
+        DB.movies.search(
+          {
+            range: { imdb_score: { from: 0, to: 100 } }
+          },
+          function (err, result) {
+            if (err) {
+              console.log('DB.movies.search with range ', err)
+              return resolve(JSON.stringify(err))
+            }
+            console.log('DB.movies.search with range')
+            resolve(result)
+          }
+        )
+      })
+
+      // return 'Route to get movies count by language, country and IMDB score (the IMDB score should be a range)'
     }
   },
   {
     method: 'GET',
-    path: '/api/movie/all',
+    path: '/api/movies/all',
     handler: (req, res) => {
+      // let q = req.query
       return 'Route to get all movies with the ability to filter them by genres and plot keywords'
     }
   },
@@ -41,9 +59,8 @@ module.exports = [
     path: '/api/{schema}',
     handler: (req, res) => {
       let schema = req.params.schema
-      if (['actor', 'director', 'movie'].includes(`${schema}`)) {
-        let data = DB[schema].find({}).map(ele => ele)
-        return data
+      if (['actors', 'directors', 'movies'].includes(`${schema}`)) {
+        return DB[schema].find({}).map(ele => ele)
       }
       return 'Route to get all movies with the ability to filter them by genres and plot keywords'
     }
@@ -51,16 +68,26 @@ module.exports = [
   {
     method: 'POST',
     path: '/api/{schema}',
-    handler: (req, res) => {
+    handler: (req, handler) => {
       let schema = req.params.schema
 
-      if (['actor', 'director', 'movie'].includes(schema)) {
+      if (['actors', 'directors', 'movies'].includes(schema)) {
         var data = new DB[schema](req.payload)
+        // console.log(data)
+        // return new Promise(function (resolve, reject) {
+        //   data.save(function (err, doc) {
+        //     console.log('save callback ')
+        //     if (err) return reject(JSON.stringify(err))
+        //     doc.on('es-indexed', function (err, res) {
+        //       if (err) return resolve(JSON.stringify(err))
+        //       console.log('res is indexed : ', res)
+        //       resolve(JSON.stringify(res))
+        //     })
+        //   })
+        // })
         data.on('es-indexed', function (err, res) {
-          if (err) console.log("err with indexing new doc : " ,  err)
+          if (err) return console.log('err with indexing new doc : ', err)
           console.log('res is indexed : ', res)
-
-          /* Document is indexed */
         })
         return data.save()
       }
@@ -73,27 +100,37 @@ module.exports = [
     handler: async (req, res) => {
       let schema = req.params.schema
 
-      if (['actor', 'director', 'movie'].includes(schema)) {
+      if (['actors', 'directors', 'movies'].includes(schema)) {
         // TODO: update
         let res = await DB[schema].findOneById(req.params.id)
         console.log('findOneById : ', res)
-        return await JSON.stringify(Object.assign(res, req.payload).save())
-        // return 'Create CRUDs RESTful APIs for all schemas mentioned above'
+        return JSON.stringify(await Object.assign(res, req.payload).save())
       }
-      return 'Route to get all movies with the ability to filter them by genres and plot keywords'
+      return 'Create CRUDs RESTful APIs for all schemas mentioned above'
     }
   },
   {
     method: 'DELETE',
     path: '/api/{schema}/{id}',
-    handler: (req, res) => {
+    handler: (req, handler) => {
       let schema = req.params.schema
 
-      if (['actor', 'director', 'movie'].includes(schema)) {
-        return DB[schema].findByIdAndRemove(req.params.id)
-        // return 'Create CRUDs RESTful APIs for all schemas mentioned above'
+      if (['actors', 'directors', 'movies'].includes(schema)) {
+        return new Promise(function (resolve, reject) {
+          DB[schema].findOneById(req.params.id, function (err, doc) {
+            console.log('findOneById : ', doc)
+            doc.remove(function (err) {
+              if (err) return reject(JSON.stringify(err))
+              doc.on('es-removed', function (err, res) {
+                if (err) return resolve(JSON.stringify(err))
+                resolve(res)
+              })
+            })
+          })
+        })
       }
-      return 'Route to get all movies with the ability to filter them by genres and plot keywords'
+      // return DB[schema].findByIdAndRemove(req.params.id)
+      return 'Create CRUDs RESTful APIs for all schemas mentioned above'
     }
   }
 ]

@@ -43,76 +43,104 @@ var MovieSchema = new Schema({
   actors: [
     {
       type: Schema.Types.ObjectId,
-      ref: 'actor'
+      ref: 'actor',
+      es_schema: ActorSchema,
+      es_indexed: true,
+      es_select: 'name facebook_page_link'
     }
   ],
   director: {
     type: Schema.Types.ObjectId,
-    ref: 'director'
+    ref: 'director',
+    es_schema: DirectorSchema,
+    es_indexed: true,
+    es_select: 'name'
   },
   color: String
 })
 
-ActorSchema.plugin(mongoosastic, {
-  host: 'search-nestrom-playground1-pe3bbwxgkncelmmg6u3d45exdq.eu-west-1.es.amazonaws.com',
-  protocol: 'https',
-  curlDebug: true
-})
+// ActorSchema.plugin(mongoosastic, {
+//   hosts: [
+//     'search-nestrom-test-ro7mgh2c3l5hbg2dpuswitymgu.us-east-2.es.amazonaws.com',
+//     'https://search-nestrom-test-ro7mgh2c3l5hbg2dpuswitymgu.us-east-2.es.amazonaws.com/_plugin/kibana/'
+//   ],
+//   protocol: 'https',
+//   curlDebug: true
+// })
 
-DirectorSchema.plugin(mongoosastic, {
-  host: 'search-nestrom-playground1-pe3bbwxgkncelmmg6u3d45exdq.eu-west-1.es.amazonaws.com',
-  protocol: 'https',
-  curlDebug: true
-})
+// DirectorSchema.plugin(mongoosastic, {
+//   hosts: [
+//     'search-nestrom-test-ro7mgh2c3l5hbg2dpuswitymgu.us-east-2.es.amazonaws.com',
+//     'https://search-nestrom-test-ro7mgh2c3l5hbg2dpuswitymgu.us-east-2.es.amazonaws.com/_plugin/kibana/'
+//   ],
+//   protocol: 'https',
+//   curlDebug: true
+// })
 
 MovieSchema.plugin(mongoosastic, {
-  host: 'search-nestrom-playground1-pe3bbwxgkncelmmg6u3d45exdq.eu-west-1.es.amazonaws.com',
+  hosts: [
+    'search-nestrom-test-ro7mgh2c3l5hbg2dpuswitymgu.us-east-2.es.amazonaws.com',
+    'https://search-nestrom-test-ro7mgh2c3l5hbg2dpuswitymgu.us-east-2.es.amazonaws.com/_plugin/kibana/'
+  ],
   populate: [
-    { path: 'actor', select: 'name age facebook_page_link' },
-    { path: 'director', select: 'name age' }
+    { path: 'actors', select: 'name facebook_page_link' },
+    { path: 'directors', select: 'name' }
   ],
   protocol: 'https',
   curlDebug: true
 })
 
-var movie = mongoose.model('movie', MovieSchema)
-var director = mongoose.model('director', DirectorSchema)
-var actor = mongoose.model('actor', ActorSchema)
+var movies = mongoose.model('movie', MovieSchema)
+var directors = mongoose.model('director', DirectorSchema)
+var actors = mongoose.model('actor', ActorSchema)
 
-doer(movie)
-doer(director)
-doer(actor)
+// ;(async function () {
+//   // await doer(actors)
+//   // await doer(directors)
+//   await doer(movies)
+// })()
 
 var DB = {
-  actor,
-  director,
-  movie
+  actors,
+  directors,
+  movies
 }
 
 module.exports = DB
 
-function doer (schema) {
-  schema.createMapping(function (err, mapping) {
-    if (err) {
-      console.log('error creating mapping (you can safely ignore this)')
-      console.log(err)
-    } else {
-      console.log('mapping created!')
-      console.log(mapping)
-    }
-  })
-  var stream = schema.synchronize(function (err, data) {
-    console.log('schema.synchronize err : ', err)
-    console.log('schema.synchronize data : ', data)
-  })
-  var count = 0
+// function doer (schema) {
+//   return new Promise(function (resolve, reject) {
+//     console.log('start sync !')
+//     var stream = schema.synchronize(function (err, data) {
+//       console.log('schema.synchronize err : ', err)
+//       console.log('schema.synchronize data : ', data)
+//     })
+//     var count = 0
 
-  stream.on('data', (err, doc) => {
-    console.log('on data , err : ', err)
-    console.log('on data , doc : ', doc)
-    count++
-  })
+//     stream.on('error', err => {
+//       console.log('err with sync : ', err)
+//       reject()
+//     })
 
-  stream.on('close', () => console.log('indexed ' + count + ' documents!'))
-  stream.on('error', err => console.log('err with sync : ', err))
-}
+//     stream.on('data', (err, doc) => {
+//       console.log('on data , err : ', err)
+//       console.log('on data , doc : ', doc)
+//       count++
+//     })
+
+//     stream.on('close', () => {
+//       console.log('indexed ' + count + ' documents!')
+//       // schema.createMapping(function (err, mapping) {
+//       //   // if (err && !err.message.includes('resource_already_exists_exception')) {
+//       //   if (err) {
+//       //     // && !err.message.includes('resource_already_exists_exception')) {
+//       //     console.log('error creating mapping (you can safely ignore this)')
+//       //     console.log(err)
+//       //   }
+//       //   console.log('mapping created!')
+//       //   console.log(mapping)
+//       //   resolve()
+//       // })
+//     })
+//   })
+// }
