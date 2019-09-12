@@ -54,25 +54,19 @@ var MovieSchema = new Schema({
 })
 
 ActorSchema.plugin(mongoosastic, {
-  host:
-    'search-nestrom-playground1-pe3bbwxgkncelmmg6u3d45exdq.eu-west-1.es.amazonaws.com',
-  port: 9200,
+  host: 'search-nestrom-playground1-pe3bbwxgkncelmmg6u3d45exdq.eu-west-1.es.amazonaws.com',
   protocol: 'https',
   curlDebug: true
 })
 
 DirectorSchema.plugin(mongoosastic, {
-  host:
-    'search-nestrom-playground1-pe3bbwxgkncelmmg6u3d45exdq.eu-west-1.es.amazonaws.com',
-  port: 9200,
+  host: 'search-nestrom-playground1-pe3bbwxgkncelmmg6u3d45exdq.eu-west-1.es.amazonaws.com',
   protocol: 'https',
   curlDebug: true
 })
 
 MovieSchema.plugin(mongoosastic, {
-  host:
-    'search-nestrom-playground1-pe3bbwxgkncelmmg6u3d45exdq.eu-west-1.es.amazonaws.com',
-  port: 9200,
+  host: 'search-nestrom-playground1-pe3bbwxgkncelmmg6u3d45exdq.eu-west-1.es.amazonaws.com',
   populate: [
     { path: 'actor', select: 'name age facebook_page_link' },
     { path: 'director', select: 'name age' }
@@ -85,9 +79,9 @@ var movie = mongoose.model('movie', MovieSchema)
 var director = mongoose.model('director', DirectorSchema)
 var actor = mongoose.model('actor', ActorSchema)
 
-// doer(movie)
-// doer(director)
-// doer(actor)
+doer(movie)
+doer(director)
+doer(actor)
 
 var DB = {
   actor,

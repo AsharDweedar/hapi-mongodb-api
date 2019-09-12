@@ -1,6 +1,5 @@
 require('dotenv').config()
 const Hapi = require('hapi')
-const routes = require('./server/routes.js')
 const { conn } = require('./db/mongoose.js')
 
 const init = async () => {
@@ -16,6 +15,7 @@ const init = async () => {
   console.log('db started')
 
   console.log('calling routes')
+  const routes = require('./server/routes.js')
   routes.map(rout => server.route(rout))
 
   console.log('starting the server')
