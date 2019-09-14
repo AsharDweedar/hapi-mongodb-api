@@ -30,12 +30,13 @@ var MovieSchema = new Schema({
   num_user_for_reviews: Number,
   language: String, // 2
   country: String, // 2
-  content_rating: Number,
+  content_rating: String,
   budget: Number,
   title_year: Number,
   imdb_score: Number,
   aspect_ratio: Number,
   movie_facebook_likes: Number,
+  color: String,
   actors: [
     {
       type: Schema.Types.ObjectId,
@@ -45,8 +46,7 @@ var MovieSchema = new Schema({
   director: {
     type: Schema.Types.ObjectId,
     ref: 'director'
-  },
-  color: String
+  }
 })
 
 MovieSchema.plugin(mongoosastic, {
@@ -55,8 +55,8 @@ MovieSchema.plugin(mongoosastic, {
     'https://search-nestrom-test-ro7mgh2c3l5hbg2dpuswitymgu.us-east-2.es.amazonaws.com/_plugin/kibana/'
   ],
   populate: [
-    { path: 'actors', select: 'name facebook_page_link' },
-    { path: 'director', select: 'name username' }
+    { path: 'actors', select: 'name facebook_likes' },
+    { path: 'director', select: 'name facebook_likes' }
   ],
   protocol: 'https',
   curlDebug: true

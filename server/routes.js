@@ -2,6 +2,15 @@ const DB = require('../db/db')
 module.exports = [
   {
     method: 'GET',
+    path: '/api/run',
+    handler: (req, res) => {
+      let exec = require('../db/seed/script')
+      exec()
+      return 'running'
+    }
+  },
+  {
+    method: 'GET',
     path: '/api/dbSync',
     handler: (req, res) => {
       return new Promise(function (resolve, reject) {
@@ -15,8 +24,7 @@ module.exports = [
           })
 
           stream.on('data', (err, doc) => {
-            console.log('sync , err : ', err, 'on data , doc : ', doc)
-            count++
+            console.log(count++)
           })
 
           stream.on('close', () => {
