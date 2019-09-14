@@ -26,7 +26,7 @@ module.exports = function () {
     .pipe(csv())
     .on('data', row => rows.push(row))
     .on('end', async () => {
-      console.log('CSV file successfully processed')
+      console.log('CSV file processing')
       for (let j = 0; j < rows.length; j++) {
         let row = rows[j]
 
@@ -34,15 +34,12 @@ module.exports = function () {
         if (row['director_name'] && row['director_name'] != '') {
           var found = await DB.directors.find({ name: row['director_name'] })
           if (found.length != 0) {
-            console.log('found old director : ', found[0])
             director_doc = found[0]
           } else {
             director_doc = new DB.directors({
               name: row['director_name'],
               facebook_likes: row['director_facebook_likes']
             })
-
-            console.log('saving director : ', await director_doc.save())
           }
           director = director_doc._id
         }
@@ -58,7 +55,6 @@ module.exports = function () {
                 name: row[`actor_${i}_name`],
                 facebook_likes: parser(row[`actor_${i}_facebook_likes`])
               })
-              console.log('save actor : ', await actor.save())
               actors.push(actor._id)
             }
           }
@@ -66,12 +62,9 @@ module.exports = function () {
 
         var found = await DB.movies.find({ title: row['movie_title'].trim() })
         if (found.length != 0) {
-          console.log('found old movie : ', found[0])
-          console.log('already exists')
           found[0].index(function (err, res) {
-            console.log("I've been indexed!", res, ', ..... or not ? ', err)
-            if (err) console.log(++indexed_failed)
-            if (!err) console.log(++indexed)
+            if (err) console.log('indexed_failed :', ++indexed_failed)
+            if (!err) console.log('indexed :', ++indexed)
           })
         } else {
           let doc = new DB.movies({
@@ -100,18 +93,16 @@ module.exports = function () {
             num_critic_for_reviews: row['num_critic_for_reviews'].trim(),
             facenumber_in_poster: row['facenumber_in_poster'].trim()
           })
-          console.log('doc : ', doc)
           await doc.save()
           doc.on('es-indexed', function (err, res) {
             if (err) {
-              console.log('err indexing : ', err)
               return doc.index(function (err, res) {
-                console.log("I've been indexed!", res, ', ..... or not ? ', err)
-                if (err) console.log(++indexed_failed)
-                if (!err) console.log(++indexed)
+                console.log('force index!', res, ', did fail ? ', err)
+                if (err) console.log('indexed_failed : ', ++indexed_failed)
+                if (!err) console.log('indexed : ', ++indexed)
               })
             }
-            console.log('res is indexed : ', ++indexed, res)
+            console.log('res is indexed : ', ++indexed)
           })
         }
       }

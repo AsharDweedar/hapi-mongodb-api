@@ -15,7 +15,6 @@ const init = async () => {
   await conn
   console.log('db started')
 
-  console.log('calling routes')
   const routes = require('./server/routes.js')
   server.route(routes)
 
@@ -26,7 +25,6 @@ const init = async () => {
 
 process.on('unhandledRejection', err => {
   console.log('unhandledRejection : ', err)
-  process.exit(1)
 })
 
 init()

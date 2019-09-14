@@ -74,6 +74,7 @@ module.exports = [
       }
 
       return new Promise((resolve, reject) => {
+        console.log(query)
         DB.movies.search(query, function (err, result) {
           if (err) {
             console.log('search movies >> ', err, '++', result)
@@ -100,21 +101,22 @@ module.exports = [
           query.bool.must.push({ match: { country: `${q['country']}` } })
         }
         if (!!q['imdb_from'] && !!q['imdb_to']) {
-          query['bool']['should'] = {
+          query.bool.must.push({
             range: {
               imdb_score: {
                 from: Number.parseInt(q['imdb_from']),
                 to: Number.parseInt(q['imdb_to'])
               }
             }
-          }
+          })
         }
+        console.log(query)
         DB.movies.search(query, function (err, result) {
           if (err) {
             console.log('DB.movies.search with range (err) ', err)
             return resolve({ count: 0 })
           }
-          console.log('DB.movies.search with range (res) ')
+          console.log('DB.movies.search with range (res) ', result.hits.hits)
           resolve({ count: result.hits.hits.length })
         })
       })
@@ -139,6 +141,7 @@ module.exports = [
       }
 
       return new Promise((resolve, reject) => {
+        console.log(query)
         DB.movies.search(query, function (err, result) {
           if (err) {
             console.log('**************************', err, '++', result)
@@ -216,9 +219,12 @@ module.exports = [
           console.log(doc)
           let saved = await doc.save()
 
-          saved.index(function (err, res) {
-            console.log("I've been indexed!", res, 'or not ? : ', err)
-          })
+          if (saved.index) {
+            // will only apply for movies
+            saved.index(function (err, res) {
+              console.log("I've been indexed!", res, 'or not ? : ', err)
+            })
+          }
 
           return saved
         }
