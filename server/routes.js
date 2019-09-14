@@ -55,7 +55,7 @@ module.exports = [
   },
   {
     method: 'GET',
-    path: '/api/{schema}/search',
+    path: '/api/movies/search',
     handler: async (req, res) => {
       let q = req.query
       var query = { bool: { must: [] } }
