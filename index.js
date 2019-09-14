@@ -3,11 +3,11 @@ const Hapi = require('hapi')
 const { conn } = require('./db/mongoose.js')
 
 const init = async () => {
-  // const server = Hapi.server({
-  //   port: process.env.PORT || 5000,
-  //   host: process.env.HOST
-  // })
-  var server = new Hapi.Server(~~process.env.PORT || 3000, '0.0.0.0')
+  const server = Hapi.server({
+    port: ~~process.env.PORT,
+    host: process.env.HOST
+  })
+  // var server = new Hapi.Server(~~process.env.PORT || 3000, '0.0.0.0')
 
   server.log()
 
