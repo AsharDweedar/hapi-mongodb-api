@@ -63,7 +63,9 @@ module.exports = [
         query.bool.must.push({ match: { title: `${q['title']}` } })
       }
       if (q['genres']) {
-        query.bool.must.push({ match: { genres: JSON.stringify(q['genres']) } })
+        query.bool.must.push({
+          match: { genres: JSON.stringify(q['genres']) }
+        })
       }
       if (q['plot_keywords']) {
         query.bool.must.push({
@@ -126,7 +128,9 @@ module.exports = [
       let q = req.query
       var query = { bool: { must: [] } }
       if (q['genres']) {
-        query.bool.must.push({ match: { genres: JSON.stringify(q['genres']) } })
+        query.bool.must.push({
+          match: { genres: JSON.stringify(q['genres']) }
+        })
       }
       if (q['plot_keywords']) {
         query.bool.must.push({
@@ -256,6 +260,13 @@ module.exports = [
         })
       }
       return 'delete data from one of the schemas (actors, directors, movies)'
+    }
+  },
+  {
+    method: 'GET',
+    path: '/',
+    handler: (req, res) => {
+      return 'Hello World'
     }
   }
 ]
