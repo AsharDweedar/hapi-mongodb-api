@@ -1,7 +1,2 @@
-- define relations in mongoose schemas
-- config elastic
-- finish CRUDs RESTful APIs
-- check schemas fields data types
-- create the 3 requested endpoints
-- write script to insert the DB seeds
-- 
+- finish CRUDs RESTful APIss
+- write script to insert the DB seeds 
