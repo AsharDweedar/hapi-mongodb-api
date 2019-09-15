@@ -116,8 +116,8 @@ module.exports = [
             console.log('DB.movies.search with range (err) ', err)
             return resolve({ count: 0 })
           }
-          console.log('DB.movies.search with range (res) ', result.hits.hits)
-          resolve({ count: result.hits.hits.length })
+          console.log(result)
+          resolve({ count: result.hits.total.value })
         })
       })
     }
