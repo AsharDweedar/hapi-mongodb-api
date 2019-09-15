@@ -1,3 +1,9 @@
+**Stack:**
+
+- Hapi as a framework
+- mongoose as orm
+- mongoosastic as elastic search plugin
+
 **Start The App:**
 
 - `npm install`
@@ -25,6 +31,8 @@
 - Kibana : https://search-nestrom-test-ro7mgh2c3l5hbg2dpuswitymgu.us-east-2.es.amazonaws.com/_plugin/kibana/
 
 **Endpoints:**
+
+- GET: '/api/run' to run script handling the csv sheet
 
 - GET: '/api/movies/search'
 
