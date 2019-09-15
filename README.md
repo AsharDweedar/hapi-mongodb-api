@@ -1,10 +1,21 @@
+Start The App:
+
+    - `npm install`
+    - define env:
+
+        HOST=localhost
+        PORT=3000
+        MONGO_LINK=mongodb+srv://admin:admin_123@nestrom-playground1-hofdl.mongodb.net/test?retryWrites=true&w=majority
+
+    - `npm start`
+
 Postman Collection link:
-https://www.getpostman.com/collections/5cba874191d68181cf56
+
+    - https://www.getpostman.com/collections/5cba874191d68181cf56
 
 Elastic search links:
 
     - Endpoint : https://search-nestrom-test-ro7mgh2c3l5hbg2dpuswitymgu.us-east-2.es.amazonaws.com
-    - Domain ARN : arn:aws:es:us-east-2:870484560720:domain/nestrom-test
     - Kibana : https://search-nestrom-test-ro7mgh2c3l5hbg2dpuswitymgu.us-east-2.es.amazonaws.com/_plugin/kibana/
 
 Endpoints:
