@@ -20,11 +20,18 @@ Elastic search links:
 
 Endpoints:
 
-    - GET: '/api/movies/search', query params: ?title='title'&genres='genres'&plot_keywords='plot_keywords'
+    - GET: '/api/movies/search'
 
-    - GET: '/api/movies/count', query params: ?language='language'&country='country'&imdb_from='imdb_from'&imdb_to='imdb_to'
+        * query params: ?title='title'&genres='genres'&plot_keywords='plot_keywords'
 
-    - GET: '/api/movies/all', query params: ?genres='genres'&plot_keywords='plot_keywords'
+    - GET: '/api/movies/count'
+
+        * query params: ?language='language'&country='country'&imdb_from='imdb_from'&imdb_to='imdb_to'
+
+    - GET: '/api/movies/all'
+
+        * query params: ?genres='genres'&plot_keywords='plot_keywords'
+        * add size=n to specify the result's length
 
     - GET: '/api/{schema}'
 

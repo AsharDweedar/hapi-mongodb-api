@@ -111,7 +111,7 @@ module.exports = [
           })
         }
         console.log(query)
-        DB.movies.search(query, function (err, result) {
+        DB.movies.search(query, {size: 0}, function (err, result) {
           if (err) {
             console.log('DB.movies.search with range (err) ', err)
             return resolve({ count: 0 })
@@ -141,8 +141,9 @@ module.exports = [
       }
 
       return new Promise((resolve, reject) => {
-        console.log(query)
-        DB.movies.search(query, function (err, result) {
+        let qeuryParams = q['size'] ? { size: Number.parseInt(q['size']) } : {}
+        console.log(query, qeuryParams)
+        DB.movies.search(query, qeuryParams, function (err, result) {
           if (err) {
             console.log('**************************', err, '++', result)
             return resolve([])
