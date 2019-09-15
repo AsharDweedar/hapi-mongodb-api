@@ -1,44 +1,50 @@
-Start The App:
+**Start The App:**
 
-    - `npm install`
-    - define env:
+- `npm install`
+- define env:
 
-        HOST=localhost
-        PORT=3000
-        MONGO_LINK=mongodb+srv://admin:admin_123@nestrom-playground1-hofdl.mongodb.net/test?retryWrites=true&w=majority
+  HOST=localhost
+  PORT=3000
+  MONGO_LINK=mongodb+srv://admin:admin_123@nestrom-playground1-hofdl.mongodb.net/test?retryWrites=true&w=majority
 
-    - `npm start`
+- `npm start`
 
-Postman Collection link:
+**Postman Collection:**
 
-    - https://www.getpostman.com/collections/5cba874191d68181cf56
+- link: https://www.getpostman.com/collections/5cba874191d68181cf56
+- each endpoint has one successful example
 
-Elastic search links:
+**Notes on the data csv:**
 
-    - Endpoint : https://search-nestrom-test-ro7mgh2c3l5hbg2dpuswitymgu.us-east-2.es.amazonaws.com
-    - Kibana : https://search-nestrom-test-ro7mgh2c3l5hbg2dpuswitymgu.us-east-2.es.amazonaws.com/_plugin/kibana/
+- num_critic_for_reviews, facenumber_in_poster: both exist in the file but not in the schema description
+- favs does not exist in the sheet
 
-Endpoints:
+**Elastic search links:**
 
-    - GET: '/api/movies/search'
+- Endpoint : https://search-nestrom-test-ro7mgh2c3l5hbg2dpuswitymgu.us-east-2.es.amazonaws.com
+- Kibana : https://search-nestrom-test-ro7mgh2c3l5hbg2dpuswitymgu.us-east-2.es.amazonaws.com/_plugin/kibana/
 
-        * query params: ?title='title'&genres='genres'&plot_keywords='plot_keywords'
+**Endpoints:**
 
-    - GET: '/api/movies/count'
+- GET: '/api/movies/search'
 
-        * query params: ?language='language'&country='country'&imdb_from='imdb_from'&imdb_to='imdb_to'
+  - query params: ?title='title'&genres='genres'&plot_keywords='plot_keywords'
 
-    - GET: '/api/movies/all'
+- GET: '/api/movies/count'
 
-        * query params: ?genres='genres'&plot_keywords='plot_keywords'
-        * add size=n to specify the result's length
+  - query params: ?language='language'&country='country'&imdb_from='imdb_from'&imdb_to='imdb_to'
 
-    - GET: '/api/{schema}'
+- GET: '/api/movies/all'
 
-    - GET: '/api/{schema}/{id}'
+  - query params: ?genres='genres'&plot_keywords='plot_keywords'
+  - add size=n to specify the result's length
 
-    - POST: '/api/{schema}', body params: from schema fields
+- GET: '/api/{schema}'
 
-    - PUT: '/api/{schema}/{id}', body params: from schema fields
+- GET: '/api/{schema}/{id}'
 
-    - DELETE: '/api/{schema}/{id}'
+- POST: '/api/{schema}', body params: from schema fields
+
+- PUT: '/api/{schema}/{id}', body params: from schema fields
+
+- DELETE: '/api/{schema}/{id}'
