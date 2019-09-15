@@ -9,9 +9,9 @@
 - `npm install`
 - define env:
 
-  HOST=localhost
-  PORT=3000
-  MONGO_LINK=mongodb+srv://admin:admin_123@nestrom-playground1-hofdl.mongodb.net/test?retryWrites=true&w=majority
+  * HOST=localhost
+  * PORT=3000
+  * MONGO_LINK=mongodb+srv://admin:admin_123@nestrom-playground1-hofdl.mongodb.net/test?retryWrites=true&w=majority
 
 - `npm start`
 
